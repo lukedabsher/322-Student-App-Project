@@ -7,9 +7,14 @@
         <div class ="nav-container">
         <table>
             <tr>
-                <td><a href="{{ url_for('index') }}" class = "button">Home</a></td>    
-                <td><a href="{{ url_for('register') }}" class = "button">Register</a></td>
-                <td><a href="{{ url_for('createclass') }}" class = "button">Create Class</a></td>
+                <td><a href="{{ url_for('index') }}" class = "button">Home</a></td>
+                <td><a href="{{ url_for('createclass') }}" class = "button">Create Class</a></td>    
+                {%if current_user.is_anonymous%}
+                    <td><a href="{{ url_for('login') }}" class = "button">Login</a></td>
+                {%else%}
+                <td><a href="{{ url_for('logout') }}" class = "button">Logout</a></td>
+                {%endif%}
+                <td> Current user is: <span class="useritem"> {{ current_user.username }} </span></td>
             </tr>
         </table>
         </div>

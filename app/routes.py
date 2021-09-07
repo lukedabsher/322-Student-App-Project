@@ -1,8 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app,db
 
-from app.forms import ClassForm, RegistrationForm
+from app.forms import ClassForm, LoginForm, RegistrationForm, LoginForm
 from app.models import Class, Major, Student
+from flask_login import login_user, current_user, logout_user, login_required
+from datetime import datetime
+
 
 @app.before_first_request
 def initDB(*args, **kwargs):
@@ -19,11 +22,13 @@ def initDB(*args, **kwargs):
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
+@login_required
 def index():
     allclasses = Class.query.order_by(Class.major).all()
     return render_template('index.html', title="Course List", classes = allclasses)
 
 @app.route('/createclass/', methods=['GET','POST'])
+@login_required
 def createclass():
     cform = ClassForm()
     if cform.validate_on_submit():
@@ -45,3 +50,30 @@ def register():
         flash('Congratulations, you are registered!')
         return redirect(url_for('index'))
     return render_template('register.html', form = rform)
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.add(current_user)
+        db.session.commit()
+
+@app.route('/login', methods=['GET', 'POST']),
+def login():
+    if current_user.is_authenticated:
+        return  redirect(url_for('index'))
+    lform = LoginForm()
+    if lform.validate_on_submit():
+        student = Student.query.filter_by(username = lform.username.data).first()
+        if (student is None) or (student.check_password(lform.password.data) ==False):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(student, remember = lform.remember_me.data )
+        return redirect(url_for('index'))
+    return render_template('login.html',title='Sing In', form=lform)
+
+@app.route('/logout', methods=['GET'])
+@login_required
+def logout():
+    logout_user()
+    return  redirect(url_for('login'))
