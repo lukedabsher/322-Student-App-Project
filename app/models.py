@@ -1,4 +1,7 @@
+from enum import unique
 from app import db
+from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Class(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -16,3 +19,24 @@ class Major(db.Model):
     classes = db.relationship('Class', backref= 'coursemajor', lazy='dynamic')
     def __repr__(self):
         return '<Major name: {} - department: {}>'.format(self.name,self.department)
+
+class Student(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(64) ,unique=True,index=True)
+    password_hash = db.Column(db.String(128))
+    firstname = db.Column(db.String(128))
+    lastname =db.Column(db.String(128))
+    address = db.Column(db.String(128))
+    email =  db.Column(db.String(128),unique=True,index=True)
+    last_seen =  db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<Student {} - {}{} - {};>'.format(self.id,self.firstname, self.lastname, self.email)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        self.password_hash = check_password_hash(password)
+
+    
