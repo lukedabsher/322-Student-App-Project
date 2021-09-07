@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Display Student Profile </h1>
+    <h2>Student Username: {{student.username}} </h2>
+    <p>Name: {{student.firstname}} {{student.lastname}} </p>
+    <p>Email: {{student.email}}</p>
+    <p>Address: {%if student.address%} {{student.address}} {%else%} No address {%endif%}</p>
+    <p>Last seen on: {{student.last_seen}}</p>
+{% endblock %}
