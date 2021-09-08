@@ -106,3 +106,8 @@ def edit_profile():
     else:
         pass
     return render_template('edit_profile.html', title='Edit Profile', form = eform)
+
+@app.route('/roster/<classid>', methods = ['GET'])
+def roster(classid):
+    theclass = Class.query.filter_by(id =classid).first()
+    return render_template('roster.html', title="Class Roster", current_class = theclass)
