@@ -14,8 +14,9 @@
 </thead>
 </table>
 
-{%for student current_class.roster%}
-{%include '_student.html'%}
+{%for enrollment current_class.roster%}
+    {% set student = enrollment.studentenrolled %}
+    {%include '_student.html'%}
 {%endfor%}
 <br>
 <a href= "{{url_for('index')}}" class = "button"> Return to main page</a>

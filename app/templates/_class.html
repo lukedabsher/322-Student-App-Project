@@ -3,12 +3,14 @@
             <td width = "60%"> {{class.major}} {{ class.coursenum}} - {{class.title}} </td>
             <td width = "20%">
                 {%if current_user.is_enrolled(class) == False%}
-                <form action = "{{url_for('enroll',classid=class.id)}}" method = "post">
-                   <input type = "submit" value ="Enroll" class = "button">
-                </form>
-                <form action = "{{url_for('unenroll',classid=class.id)}}" method = "post">
-                    <input type = "submit" value ="Unenroll" class = "button">
-                </form>
+                    <form action = "{{url_for('enroll',classid=class.id)}}" method = "post">
+                        <input type = "submit" value ="Enroll" class = "ebutton">
+                    </form>
+                {% else %}
+                    <form action = "{{url_for('unenroll',classid=class.id)}}" method = "post">
+                        <input type = "submit" value ="Unenroll" class = "ebutton">
+                    </form>
+                    Enrolled on : {{moment( curent_user.getEnrolmentDate(class)).format('LL')}}
                 {% endif %}
             </td>
             <td width = "20%">

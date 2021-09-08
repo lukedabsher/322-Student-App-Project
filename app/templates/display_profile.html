@@ -11,7 +11,8 @@
     {% if student.enrolledCourses() %}
         <p><b>Enrolled Classes:</b></p>
 
-        {% for class in student.enrolledCourses() %}
+        {% for enrollment in student.enrolledCourses() %}
+            {% set class = enrollment.classenrolled %}
             {% include '_class.html'%}
         {% endfor%}
     {% endif %}
