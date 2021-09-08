@@ -3,6 +3,6 @@
         <td width=25%> {{student.firstname}} {{student.lastname}}  </td>
         <td width=25%> {{student.email}} </td>
         <td width=25%> {{student.address}} </td>
-        <td width=25%> {{student.last_seen}} </td>
+        <td width=25%> {{moment(student.last_seen).format('LLL')}} </td>
     </tr>
 </table>
