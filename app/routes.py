@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app,db
 
-from app.forms import ClassForm, LoginForm, RegistrationForm, LoginForm, EditForm, EmptyForm
+from app.forms import ClassForm, LoginForm, RegistrationForm, LoginForm, EditForm
 from app.models import Class, Major, Student
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
@@ -24,9 +24,8 @@ def initDB(*args, **kwargs):
 @app.route('/index', methods=['GET'])
 @login_required
 def index():
-    emptyform = EmptyForm()
     allclasses = Class.query.order_by(Class.major).all()
-    return render_template('index.html', title="Course List", classes = allclasses, eform = emptyform)
+    return render_template('index.html', title="Course List", classes = allclasses)
 
 @app.route('/createclass/', methods=['GET','POST'])
 @login_required
@@ -81,8 +80,7 @@ def logout():
 
 @app.route('/display_profile', methods=['GET'])
 def display_profile():
-    emptyform = EmptyForm()
-    return render_template('display_profile.html', title= 'Display Profile', student = current_user, eform = emptyform)
+    return render_template('display_profile.html', title= 'Display Profile', student = current_user)
 
 @app.route('/edit_profile', methods=['GET','POST'])
 def edit_profile():
@@ -118,32 +116,24 @@ def roster(classid):
 @app.route('/enroll/<classid>', methods=['POST'])
 @login_required
 def enroll(classid):
-    eform=EmptyForm()
-    if eform.validate_on_submit():
-        theclass = Class.query.filter_by(id =classid).first()
-        if theclass is None:
-            flash('Class with id "{}" not found. '.format(classid))
-            return redirect(url_for('index'))
-        current_user.enroll(theclass)
-        db.session.commit()
-        flash('You are now enrolled in class {} {}!'.format(theclass.major,theclass.coursenum))
+    theclass = Class.query.filter_by(id =classid).first()
+    if theclass is None:
+        flash('Class with id "{}" not found. '.format(classid))
         return redirect(url_for('index'))
-    else:
-        return redirect(url_for('index'))
+    current_user.enroll(theclass)
+    db.session.commit()
+    flash('You are now enrolled in class {} {}!'.format(theclass.major,theclass.coursenum))
+    return redirect(url_for('index'))
+
 
 @app.route('/enroll/<classid>', methods=['POST'])
 @login_required
 def unenroll(classid):
-    eform=EmptyForm()
-    if eform.validate_on_submit():
-        theclass = Class.query.filter_by(id =classid).first()
-        if theclass is None:
-            flash('Class with id "{}" not found. '.format(classid))
-            return redirect(url_for('index'))
-        current_user.unenroll(theclass)
-        db.session.commit()
-        flash('You are now unenrolled in class {} {}!'.format(theclass.major,theclass.coursenum))
+    theclass = Class.query.filter_by(id =classid).first()
+    if theclass is None:
+        flash('Class with id "{}" not found. '.format(classid))
         return redirect(url_for('index'))
-    else:
-        return redirect(url_for('index'))
-    
+    current_user.unenroll(theclass)
+    db.session.commit()
+    flash('You are now unenrolled in class {} {}!'.format(theclass.major,theclass.coursenum))
+    return redirect(url_for('index'))

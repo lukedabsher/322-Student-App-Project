@@ -4,12 +4,10 @@
             <td width = "20%">
                 {%if current_user.is_enrolled(class) == False%}
                 <form action = "{{url_for('enroll',classid=class.id)}}" method = "post">
-                    {{ eform.hidden_tag()}}
-                    {{ eform.submit(value='Enroll', class='ebutton')}}
+                   <input type = "submit" value ="Enroll" class = "button">
                 </form>
                 <form action = "{{url_for('unenroll',classid=class.id)}}" method = "post">
-                    {{ eform.hidden_tag()}}
-                    {{ eform.submit(value='Unenroll', class='button')}}
+                    <input type = "submit" value ="Unenroll" class = "button">
                 </form>
                 {% endif %}
             </td>
