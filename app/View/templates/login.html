@@ -6,10 +6,12 @@
 
         <div class = "row">
             <div class = "col-md-4">
-                {{wtf.quick_form(form, action = url_for('login'))}}
+                {{wtf.quick_form(form, action = url_for('auth.login'))}}
             </div>
         </div>
 
     {% endif %}
+    <br>
+    <p>New user? <a href= "{{url_for('auth.register')}}">Click to register! </a> </p>
 
 {% endblock %}
