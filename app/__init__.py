@@ -10,7 +10,7 @@ db = SQLAlchemy()
 bootstrap = Bootstrap()
 login = LoginManager()
 login.login_view = 'auth.login'
-moment = Moment(app)
+moment = Moment()
 
 def create_app( config_class = Config):
     app = Flask(__name__)
